@@ -3,7 +3,7 @@
 from functools import wraps
 
 import requests
-from robin_stocks.robinhood.globals import LOGGED_IN, OUTPUT, SESSION
+from robin_stocks.robinhood.globals import LOGGED_IN, OUTPUT, SESSION, PROXY, set_proxy
 
 
 def set_login_state(logged_in):
@@ -272,6 +272,8 @@ def request_get(url, dataType='regular', payload=None, jsonify_data=True):
     res = None
     if jsonify_data:
         try:
+            if PROXY:
+                print(f"Using proxy: {PROXY}")
             res = SESSION.get(url, params=payload)
             res.raise_for_status()
             data = res.json()
@@ -322,6 +324,11 @@ def request_get(url, dataType='regular', payload=None, jsonify_data=True):
 
     return(data)
 
+def check_proxy():
+    url = 'https://httpbin.org/ip'
+    response = SESSION.get(url)
+    print(f"Response from httpbin: {response.json()}")
+    return response.json()
 
 def request_post(url, payload=None, timeout=16, json=False, jsonify_data=True):
     """For a given url and payload, makes a post request and returns the response. Allows for responses other than 200.
