@@ -8,6 +8,7 @@ from requests import Session
 LOGGED_IN = False
 # The session object for making get and post requests.
 SESSION = Session()
+PROXY = None
 SESSION.headers = {
     "Accept": "*/*",
     "Accept-Encoding": "gzip,deflate,br",
@@ -26,3 +27,9 @@ SESSION.headers = {
 #open(os.devnull,"w") for dev null
 #io.StringIO() to go to a string for the client to inspect
 OUTPUT=sys.stdout
+
+def set_proxy(proxy_dict):
+    """Function to set proxy in the session."""
+    global PROXY
+    PROXY = proxy_dict
+    SESSION.proxies.update(PROXY)
